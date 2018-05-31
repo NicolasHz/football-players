@@ -1,0 +1,16 @@
+.Table {
+    text-align: center;
+    margin: auto;
+}
+.Player {
+    width: 30%;
+}
+.Position {
+    width: 30%;
+}
+.Team {
+    width: 20%;
+}
+.Age {
+    width: 10%;
+}
