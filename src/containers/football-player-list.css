@@ -1,6 +1,14 @@
 .Table {
     text-align: center;
     margin: auto;
+    width: 90%;
+}
+.Player,
+.Position,
+.Team,
+.Age {
+    height: 40px;
+    background: lightgray;
 }
 .Player {
     width: 30%;

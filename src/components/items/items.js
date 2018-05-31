@@ -8,7 +8,7 @@ const items = (props) => {
     let items = props.items.map( ( item, index ) => {
         const age = util.calculateAge(item.dateOfBirth);
         return (
-            <tr key={item.name} className={classes.Item}>
+            <tr key={item.name} className={classes.Items}>
                 <Item text={item.name}/>
                 <Item text={item.position}/>
                 <Item text={item.nationality}/>

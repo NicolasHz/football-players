@@ -4,7 +4,6 @@ import Button from '../UI/Button/Button';
 import classes from './filter.css'
 
 class Filter extends Component {
-    options = [{value: 'cheapest', displayValue: 'Cheapest'}];
 
     state = {
         filterForm: {
@@ -12,21 +11,30 @@ class Filter extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Name'
+                    placeholder: 'Player Name'
                 },
                 value: '',
-                validation: {
-                    required: true
-                },
+                validation: {},
                 valid: false,
                 touched: false
             },
             position: {
                 elementType: 'select',
                 elementConfig: {
-                    options: this.options
+                    options: [
+                        {value: 'Attacking Midfield', displayValue: 'Attacking Midfield'},
+                        {value: 'Central Midfield', displayValue: 'Central Midfield'},
+                        {value: 'Centre-Back', displayValue: 'Centre Back'},
+                        {value: 'Centre-Forward', displayValue: 'Centre Forward'},
+                        {value: 'Defensive Midfield', displayValue: 'Defensive Midfield'},
+                        {value: 'Keeper', displayValue: 'Keeper'},
+                        {value: 'Left Midfield', displayValue: 'Left Midfield'},
+                        {value: 'Left Wing', displayValue: 'Left Wing'},
+                        {value: 'Left-Back', displayValue: 'Left Back'},
+                        {value: 'Right-Back', displayValue: 'Right Back'}
+                    ]
                 },
-                value: '',
+                value: 'attackingMidfield',
                 validation: {},
                 valid: true
             },
@@ -38,7 +46,9 @@ class Filter extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true
+                    isNumeric: true,
+                    minRange: 18,
+                    maxRange: 40
                 },
                 valid: false,
                 touched: false
@@ -48,9 +58,13 @@ class Filter extends Component {
         loading: false
     }
 
-    orderHandler = ( event ) => {
+    filterHandler = ( event ) => {
         event.preventDefault();
-        console.log(event)
+        const formData = {};
+        for (let formElementIdentifier in this.state.filterForm) {
+            formData[formElementIdentifier] = this.state.filterForm[formElementIdentifier].value;
+        }
+        this.props.search(formData);
     }
 
     checkValidity(value, rules) {
@@ -63,17 +77,12 @@ class Filter extends Component {
             isValid = value.trim() !== '' && isValid;
         }
 
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
+        if (rules.minRange) {
+            isValid = value >= rules.minRange && isValid
         }
 
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
+        if (rules.maxRange) {
+            isValid = value <= rules.maxRange && isValid
         }
 
         if (rules.isNumeric) {
@@ -112,7 +121,7 @@ class Filter extends Component {
             });
         }
         let form = (
-            <form onSubmit={this.orderHandler}>
+            <form onSubmit={this.filterHandler}>
                 {formElementsArray.map(formElement => (
                     <Input 
                         key={formElement.id}
@@ -124,7 +133,8 @@ class Filter extends Component {
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
                 ))}
-                <Button btnType="Success" disabled={!this.state.formIsValid}>Search</Button>
+                <Button btnType="Success" type={"submit"} >Search</Button>
+                <Button btnType="Warning" type={"button"} clicked={this.props.showAll}>Show All</Button>
             </form>
         );
         return (
